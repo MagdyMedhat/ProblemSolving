@@ -1,0 +1,96 @@
+/*
+ID: magdyme1
+PROG: calfflac
+LANG: C++
+*/
+
+
+
+// problem - calfflac - USACO 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+ifstream fin("calfflac.in");
+ofstream fout("calfflac.out");
+
+#define cin fin
+#define cout fout
+
+void f(int c1,int c2,vector<int> index,string work,int& start,int& end) // el moshkela hena fel interators
+{
+	int front2 = 0;
+	int back2 = 0;
+
+	for(int front=c1,back=c2; (front >= 0) && (back < index.size() ) ; front--,back++)
+	{
+		if (work[ index[front] ] != work[ index[back] ])
+		{
+
+			break;
+		}
+		front2 = front;
+		back2 = back;
+	}
+
+	if (end-start < back2-front2)
+	{
+		start = front2;
+		end = back2;
+	}
+
+}
+
+int main()
+{
+	string str = "";
+
+	while (!cin.eof())
+	{
+		string temp;
+		getline(cin,temp);
+		str += temp + '\n';
+	}
+
+	int size = str.size();
+	string work = str;
+	vector<int> index;
+
+	for (int i=0;i<size;i++)
+	{
+		if (work[i] >= 97 && work[i] <= 122)
+		{
+			index.push_back(i);
+			work[i] -= 32;
+		}
+
+		else if (work[i] >= 65 && work[i] <= 90)
+			index.push_back(i);
+	}
+
+	int start = 0;
+	int end = 0;
+
+	for (int i=0;i<index.size()-2;i++)
+	{
+		if (work[ index[i] ] == work[ index[i+1] ])
+			f(i,i+1,index,work,start,end);
+
+		else if (work[ index[i] ] == work[ index[i+2] ])
+			f(i,i+2,index,work,start,end);
+	}
+
+
+	cout << end-start+1 << endl;
+
+	for (int i=index[start];i<=index[end];i++)
+		cout << str[i];
+
+	cout << endl;
+
+
+	return 0;
+}

@@ -1,0 +1,115 @@
+/*
+ID: magdyme1
+PROG: namenum
+LANG: C++
+*/
+
+
+// problem - namenum - USACO 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+ifstream fin("namenum.in");
+ofstream fout("namenum.out");
+
+#define cin fin
+#define cout fout
+
+ifstream dict("dict.txt");
+
+bool check(int num,char ch)
+{
+	switch (num)
+	{
+	case 2:
+		if (ch == 'A' || ch == 'B' || ch == 'C')
+			return true;
+		else
+		break;
+	case 3:
+		if (ch == 'D' || ch == 'E' || ch == 'F')
+			return true;
+		else
+		break;
+	case 4:
+		if (ch == 'G' || ch == 'H' || ch == 'I')
+			return true;
+		else
+		break;
+	case 5:
+		if (ch == 'J' || ch == 'K' || ch == 'L')
+			return true;
+		else
+		break;
+	case 6:
+		if (ch == 'M' || ch == 'N' || ch == 'O')
+			return true;
+		else
+		break;
+	case 7:
+		if (ch == 'P' || ch == 'R' || ch == 'S')
+			return true;
+		else
+		break;
+	case 8:
+		if (ch == 'T' || ch == 'U' || ch == 'V')
+			return true;
+		else
+		break;
+	case 9:
+		if (ch == 'W' || ch == 'X' || ch == 'Y')
+			return true;
+		else
+		break;
+	}
+
+	return false;
+}
+
+int main()
+{
+	string num;
+	
+	while (cin >> num)
+	{
+		string temp;
+		bool found = false;
+		bool match;
+
+		while (!dict.eof())
+		{
+			dict >> temp; 
+			
+			if ( temp.size() == num.size() )
+			{
+				match = true;
+				
+				//cout << temp << " ";
+				for(int i=0;i<num.size();i++)
+				{
+					//cout << num[i] << " " << temp[i] << endl;
+
+					if ( !check(num[i]-48,temp[i]) )
+					{
+						match = false;
+						break;
+					}
+				}
+
+				if (match)
+				{
+					found = true;
+					cout << temp << endl;
+				}
+			}
+		}
+
+		if (!found)
+			cout << "NONE" << endl;
+	}
+
+	return 0;
+}

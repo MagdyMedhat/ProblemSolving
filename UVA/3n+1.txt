@@ -1,0 +1,63 @@
+// 100
+
+#include <iostream>
+using namespace std;
+int main()
+{
+	int num1,num2;
+
+	while(cin >> num1 >> num2)
+	{
+
+	int max = 0;
+
+	int z = num1 - num2;
+
+	if (z < 0)
+		z *= -1;
+
+	else if (z == 0)
+		z = 1;
+
+	int number;
+
+	for (int i=0;i<=z;i++)
+	{
+		if (num1 < num2)
+			number = num1 + i;
+
+		else if (num2 < num1)
+			number = num2 + i;
+
+		else
+			number = num1;
+
+		int temp;
+
+		int counter = 1;
+
+		while(number != 1)
+		{
+			temp = number % 2;
+
+			if (temp == 0)
+				number = number /2;
+
+			else
+			{
+				number *= 3;
+				number ++;
+			}
+
+			counter++;
+		}
+
+		if ( counter > max )
+			max = counter;
+
+	}
+	cout << num1 << ' ' << num2 << ' ' << max << endl;
+	}
+
+	return 0;
+}

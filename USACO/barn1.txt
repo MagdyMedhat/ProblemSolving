@@ -1,0 +1,159 @@
+/*
+ID: magdyme1
+PROG: barn1
+LANG: C++
+*/
+
+
+// problem - barn1 - USACO 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+ifstream fin("barn1.in");
+ofstream fout("barn1.out");
+
+#define cin fin
+#define cout fout
+
+
+struct Unit
+{
+	int index;
+	int count;
+};
+
+bool pred(Unit u1,Unit u2)
+{
+	return (u1.count < u2.count);
+}
+
+int main()
+{
+	int M,S,C;
+	
+	while (cin >> M >> S >> C)
+	{
+		bool stall[200] = {false}; // the wall
+
+		 // input
+		for (int i=0;i<C;i++)
+		{
+			int input;
+			cin >>  input;
+			stall[input-1] = true;
+		}
+		
+
+		if ( M < C) // first special case
+		{
+			int size = 51; // must be bigger than the biggest
+			
+			while( size > M ) // boards and  gaps
+			{
+				vector<Unit> gaps,caws;
+				
+				bool current = true;
+				Unit temp;
+
+				for (int i=0;i<S;i++) // calculate occupied stalls
+				{
+					if (stall[i])
+					{
+						if (current)
+						{
+							temp.index = i;
+							temp.count = 1;
+							current = false;
+						}
+						else
+							temp.count++;
+
+						if (i+1 == S) // special case  for tail
+							caws.push_back(temp);
+					}
+					else
+					{
+						if (!current)
+						{
+							caws.push_back(temp);
+							current = true;
+						}
+					}
+
+				}
+
+	/*			cout << " occupid : " << caws.size() << endl; 
+
+				for (int i=0;i<caws.size();i++)
+					cout << caws[i].count << endl;
+
+				for (int i=0;i<S;i++)
+				{
+					if (stall[i])
+						cout << 1 << " ";
+					else
+						cout << 0 << " ";
+				}
+
+				cout << endl << "-------" << endl;*/
+
+				
+				for (int i=0;i<caws.size()-1;i++) // calculate emtpy stalls 
+				{
+					Unit temp;
+					temp.index = caws[i].index + caws[i].count;
+					temp.count =  caws[i+1].index - (caws[i].count + caws[i].index);
+					gaps.push_back(temp);
+				}
+				
+				sort(gaps.begin(),gaps.end(),pred); // sort the gaps
+
+				//cout << " gaps : " << gaps.size() << endl;
+
+				//for (int i=0;i<gaps.size();i++)
+				//	cout << gaps[i].count << endl;
+
+			
+				if ( caws.size() != M ) // 2nd special case
+				{
+					size = gaps.size();
+
+					for (int i = 0;i<gaps[0].count;i++) // pick the smallest
+					{
+						stall[ gaps[0].index + i ] = true;
+						//cout << "closing : " << gaps[0].index+i << endl;
+					}
+				}
+
+				else
+				{
+					size = -1;
+				}
+
+				
+
+				//cout <<  "size" << size << endl;
+
+			}
+
+			int count = 0;
+
+			for (int i=0;i<S;i++)
+			{
+				if (stall[i])
+					count++;
+			}
+
+			cout << count << endl;
+		}
+		else
+			cout << C << endl;
+	}
+
+	return 0;
+}

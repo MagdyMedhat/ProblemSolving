@@ -1,0 +1,61 @@
+
+// 674 - Coin Change problem
+
+#include <iostream>
+#include <string>
+#include <fstream>
+using namespace std;
+
+//ifstream fin("input.txt");
+//#define cin fin
+
+
+int CoinChange(int arr[],int N,int A)
+{
+	if (A==0)
+		return 1;
+
+	if (N==-1)
+		return 0;
+	
+	if (arr[N] > A)
+		return CoinChange(arr,N-1,A);
+
+	if (arr[N] <= A)
+		return CoinChange(arr,N,A-arr[N]) + CoinChange(arr,N-1,A);
+
+}
+
+int main()
+{
+	const int COINS_NUM = 5;
+	int coins[COINS_NUM] = {5,25,10,50,1};
+
+	const int MAX_CENTS = 7489;
+	int DP[COINS_NUM+1][MAX_CENTS+1];
+	
+	int amount = MAX_CENTS;
+
+	for(int i=0;i<=COINS_NUM;i++)
+		DP[i][0] = 1;
+
+	for(int j=0;j<=amount;j++)
+		DP[0][j] = 0;
+
+	for(int i=1;i<=COINS_NUM;i++)
+	{
+		for(int j=1;j<=amount;j++)
+		{	
+			if (coins[i-1] > j)
+				DP[i][j] = DP[i-1][j];
+
+			else if (coins[i-1] <= j)
+				DP[i][j] = DP[i][ j-coins[i-1] ] + DP[i-1][j];
+		}
+	}
+
+	while (cin >> amount)
+		cout << DP[COINS_NUM][amount] << endl;
+
+    return 0;
+}

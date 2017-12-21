@@ -1,0 +1,79 @@
+/*
+ID: magdyme1
+PROG: gift1
+LANG: C++
+*/
+// problem - Greedy Gift Givers - USACO 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <map>
+#include <vector>
+
+using namespace std;
+
+ifstream fin("gift1.in");
+ofstream fout("gift1.out");
+
+#define cin fin
+#define cout fout
+
+struct Node
+{
+	Node() : taken(0),given(0) {}
+	int taken;
+	int given;
+};
+
+int main()
+{
+
+
+	int NP;
+	string name;
+	int money;
+	int partySize;
+
+	while (cin >> NP )
+		{
+			map<string,Node> friends;
+			vector<string> names;
+
+			for (int i=0;i<NP;i++)
+			{
+				cin >> name;
+				names.push_back(name);
+			}
+
+			for (int i=0;i<NP;i++)
+			{
+				cin >> name;
+				cin >> money;
+				cin >> partySize;
+
+				if ( money != 0)
+				{
+					money -= (money % partySize);
+					friends[name].given = money;
+				}
+
+				for (int i=0;i<partySize;i++)
+				{
+					string friendName;
+					cin >> friendName;
+					friends[friendName].taken += (money / partySize);
+				}
+			}
+
+			for (int i=0;i<names.size();i++)
+			{
+				cout << names[i];
+				cout << " ";
+				cout << friends[ names[i] ].taken - friends[ names[i] ].given;
+				cout << endl;
+			}
+	}
+
+	return 0;
+}

@@ -1,0 +1,60 @@
+
+// problem 11498 - Division of Nlogonia - UVA 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+int main()
+{
+	int K,N,M,x,y;
+	
+	do
+	{
+		cin >> K;
+		cin >> N;
+		cin >> M;
+
+		for (int i=0;i<K;i++)
+		{
+			cin >> x >> y;
+
+			if ( x == N || y == M )
+				cout << "divisa";
+
+			else
+			{
+				if ( x > N )
+				{
+					if (y > M)
+						cout << "NE";
+
+					else if(y < M)
+						cout << "SE";
+				}
+				
+
+				else if ( x < N )
+				{
+					if (y > M)
+						cout << "NO";
+
+					else if(y < M)
+						cout << "SO";
+				}
+
+			}
+
+			cout << endl;
+		}
+
+	}while(K != 0);
+
+
+	return 0;
+}

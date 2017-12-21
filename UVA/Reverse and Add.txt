@@ -1,0 +1,82 @@
+
+// problem  10018 - Reverse and Add - UVA 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+ifstream fin("Input.txt");
+#define cin fin
+
+bool palCheck(string &num)
+{
+	int size = num.size();
+
+	for (int i=0;i<size/2;i++)
+	{
+		if ( num[i] != num[ (size-1) - i ] ) 
+			return false;
+	}
+
+	return true;
+}
+
+void addRev(string &num1)
+{
+	string num2 = num1;
+	reverse( num2.begin() , num2.end() );
+
+	int carry = 0;
+	int digit = 0;
+	
+	for (int i=0;i<num1.size();i++)
+	{
+		digit = ( num1[i] - '0' ) + ( num2[i] - '0' ) + carry;
+
+		if ( digit > 9 )
+		{
+			carry = 1;
+			digit -= 10;
+		}
+
+		else
+			carry = 0;
+
+		num1[i] = digit + '0';
+	}
+
+	if ( carry == 1)
+		num1 += (1 + '0') ;	
+}
+
+
+int main()
+{
+	int N;
+	cin >> N;
+	string num;
+	int counter;
+	
+	for (int i=0;i<N;i++)
+	{
+		counter = 0;
+		num = "";
+
+		cin >> num;
+
+		do
+		{
+			addRev(num);
+			counter++;
+			
+		}while ( !palCheck(num) );
+
+		cout << counter << " " << num << endl;
+	}
+
+
+	return 0;
+}

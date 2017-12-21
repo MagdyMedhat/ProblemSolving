@@ -1,0 +1,156 @@
+// test program code
+
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int main ()
+{
+	int n;
+	int m;
+	int *score;
+	int *number;
+	int **result;
+
+	while(cin >> n >> m)
+	{
+		if (n == 0 && m == 0)
+			break;
+
+
+		score = new int [n];
+		number = new int [m];
+
+		int size = 15000;
+		result = new int* [size];
+		
+		//(+, -, *, /)
+
+
+		for(int i=0;i<size;i++)
+			result[i] = new int [3];
+
+		for (int i=0;i<n;i++)
+			cin >> score[i];
+		
+		for (int i=0;i<m;i++)
+			cin >> number[i];
+
+		int counter = 0;
+
+		for (int i=0;i<m-1;i++)
+		{
+			for(int j=i;j<m-1;j++)
+			{
+				int sum = number[i] + number[j+1];
+				int times = number[i] * number[j+1];
+				int divide1 = number[i] / number[j+1];
+				int divide2 = number[j+1] / number[i];
+				int subtract1 = number[i] - number[j+1];
+				int subtract2 = number[j+1] - number[i];
+
+				for (int k=0;k<n;k++)
+				{
+					if(sum == score[k])
+					{
+						result[counter][0] = number[i];
+						result[counter][1] = 1;
+						result[counter][2] = number[j+1];
+						counter++;
+					}
+
+					if(times == score[k])
+					{
+						result[counter][0] = number[i];
+						result[counter][1] = 3;
+						result[counter][2] = number[j+1];
+						counter++;
+					}
+
+					if(divide1 == score[k])
+					{
+						result[counter][0] = number[i];
+						result[counter][1] = 4;
+						result[counter][2] = number[j+1];
+						counter++;
+					}
+
+					if(divide2 == score[k])
+					{
+						result[counter][0] = number[j+1];
+						result[counter][1] = 4;
+						result[counter][2] = number[i];
+						counter++;
+					}
+
+					if(subtract1 == score[k])
+					{
+						result[counter][0] = number[i];
+						result[counter][1] = 2;
+						result[counter][2] = number[j+1];
+						counter++;
+					}
+
+					if(subtract2 == score[k])
+					{
+						result[counter][0] = number[j+1];
+						result[counter][1] = 2;
+						result[counter][2] = number[i];
+						counter++;
+					}
+				}
+			}
+		}
+
+		for(int i=0;i<m;i++)
+		{
+			vector<int*> adress;
+
+			for(int j=0;j<counter;j++)
+			{
+				if ( result[j][0] == number[i] )
+					adress.push_back(result[j]);
+			}
+
+			for(int j=0;j<m;j++)
+			{
+			vector<int*> adress2;
+
+				for(int k=0;k<adress.size();k++)
+				{
+					if ( *(adress[k]+2) == number[j] )
+						adress2.push_back(adress[k]);
+				}
+
+				for(int k=0;k<4;k++)
+				{
+					for(int l=0;l<adress2.size();l++)
+					{
+						if (  *(adress2[l]+1) == k+1 )
+						{
+							if ( k+1 == 1)
+								cout << *adress2[l] << " + " << *(adress2[l]+2) << endl;
+
+							else if ( k+1 == 2)
+								cout << *adress2[l] << " - " << *(adress2[l]+2) << endl;
+							else if ( k+1 == 3)
+								cout << *adress2[l] << " * " << *(adress2[l]+2) << endl;
+							else if ( k+1 == 4)
+								cout << *adress2[l] << " / " << *(adress2[l]+2) << endl;
+						}
+					}
+				}
+			}
+		}
+		
+		for(int i=0;i<size;i++)
+			delete [] result[i];
+
+		delete [] result;
+		delete [] score;
+		delete [] number;
+
+		}
+	return 0;
+}

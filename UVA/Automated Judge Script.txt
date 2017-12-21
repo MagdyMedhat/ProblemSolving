@@ -1,0 +1,87 @@
+
+// problem  10188 - Automated Judge Script - UVA 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+string getInts(string &str)
+{
+	string temp;
+
+	for (int i=0;i<str.size();i++)
+	{
+		if ( (str[i] >= 48 && str[i] <= 57 ) )
+			temp += str[i];
+	}
+
+	return temp;
+}
+
+int main()
+{
+	int n;
+	string input;
+	int choice;
+	int run = 1;
+
+	while ( cin >> n && n != 0)
+	{
+		cin.ignore();
+
+		string judge;
+
+		for(int i=0;i<n;i++)
+		{
+			getline(cin,input);
+			judge += input;
+			judge += char(10);
+		}
+
+		int m;
+
+		cin >> m;
+		cin.ignore();
+		
+		string team;
+
+		for(int i=0;i<m;i++)
+		{
+			getline(cin,input);
+			team += input;
+			team += char(10);
+		}
+
+			if ( judge.compare(team) == 0)
+				choice = 0; // AC
+
+			else if ( getInts(judge) == getInts(team) )
+				choice = 1; // PE
+
+			else
+				choice = 2; // WA
+
+	// output
+	
+	cout << "Run #" << run << ": ";
+
+	if (choice == 2)
+		cout << "Wrong Answer" << endl;
+
+	else if( choice == 0)
+		cout << "Accepted" << endl;
+
+	else if( choice == 1)
+		cout << "Presentation Error" << endl;
+	
+	run++;
+
+	}
+
+	return 0;
+}

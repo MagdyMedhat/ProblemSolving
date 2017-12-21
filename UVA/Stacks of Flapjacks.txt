@@ -1,0 +1,96 @@
+// Stacks of Flapjacks - 120 - UVA
+
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+void ParseInput(string s,vector<int>& v)
+{
+	stringstream ss(s);
+	int temp;
+
+	for (int i=0;!ss.eof();i++)
+	{
+		ss >> temp;
+		cout << temp << " ";
+		v.push_back(temp);
+	}
+
+	cout << endl;
+}
+
+int GetIndexOf(int num,vector<int> v)
+{
+	for (int i=0;i<v.size();i++)
+	{
+		if (v[i] == num)
+			return i;
+	}
+}
+
+void Flip(int index,vector<int>& v)
+{
+	reverse(v.begin(),v.begin()+index+1);
+}
+
+int main ()
+{
+	freopen("input.txt","r",stdin);
+
+	string input;
+
+	while ( getline(cin,input) )
+	{
+		vector<int> v;
+		vector<int> sortedV;
+		vector<int> flipRecorder;
+		
+		ParseInput(input,v);
+		sortedV = v;
+		int size = v.size();
+
+		sort(sortedV.begin(),sortedV.end());
+
+		for (int i=0;i<size;i++)
+		{
+
+			if (v[size-i-1] != sortedV[size-i-1])
+			{
+				int index = GetIndexOf(sortedV[size-i-1],v);
+
+				if (index != 0)
+				{
+					Flip(index,v);
+					flipRecorder.push_back(size-index);
+				}
+
+				Flip(size-i-1,v);
+				flipRecorder.push_back(i+1);
+			}
+		}
+
+		for (int i=0;i<flipRecorder.size();i++)
+			cout << flipRecorder[i] << " ";
+
+		cout << "0" << endl;
+	}
+
+	return 0;
+}

@@ -1,0 +1,44 @@
+
+// problem 11541 - Decoding - UVA 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+int main()
+{
+	int T;
+	cin >> T;
+	
+	string input;
+
+	for (int i=0;i<T;i++)
+	{
+		cin >> input;
+		stringstream ss(input);
+
+		char x;
+		int size;
+
+		cout << "Case " << i+1 << ": ";
+
+		while ( !ss.eof() )
+		{
+			ss >> x;
+			ss >> size;
+
+			for (int j=0;j<size;j++)
+				cout << x;
+		}
+
+		cout << endl;
+	}
+
+	return 0;
+}

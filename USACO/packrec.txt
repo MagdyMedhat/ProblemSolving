@@ -1,0 +1,372 @@
+/*
+ID: magdyme1
+PROG: packrec
+LANG: C++
+*/
+
+
+
+// problem - packrec - USACO 
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+ifstream fin("packrec.in");
+ofstream fout("packrec.out");
+
+#define cin fin
+#define cout fout
+
+struct Rect
+{
+	int h;
+	int w;
+};
+
+bool pred(Rect r1,Rect r2)
+{
+	return (r1.w < r2.w);
+}
+
+Rect case1(Rect r1,Rect r2,Rect r3,Rect r4)
+{
+	Rect r;
+	r.h = r1.h;
+
+	if (r.h < r2.h)
+		r.h = r2.h;
+
+	if (r.h < r3.h )
+		r.h = r3.h;
+	
+	if (r.h < r4.h)
+		r.h = r4.h;
+
+	r.w = r1.w + r2.w + r3.w + r4.w;
+
+	//if (r.w == 24 || r.h == 24) cout << "case 1" << endl;
+
+	return r;
+
+}
+
+Rect case2(Rect r1,Rect r2,Rect r3,Rect r4)
+{
+	// r1 el nayem
+	Rect r;
+
+	// Width
+
+	r.w = r1.w; 
+
+	int temp = r2.w + r3.w + r4.w;
+
+	if (temp > r.w)
+		r.w = temp;
+
+	
+	// Height
+
+	r.h = r2.h;
+
+	if (r.h < r3.h )
+		r.h = r3.h;
+	
+	if (r.h < r4.h)
+		r.h = r4.h;
+
+	r.h += r1.h;
+
+	//if (r.w == 24 || r.h == 24)
+	//{
+	//	cout << "case 2" << endl;
+	//	cout << "w : " << r.w << " h : " << r.h << endl;
+	//}
+
+	return r;
+
+}
+
+Rect case3(Rect r1,Rect r2,Rect r3,Rect r4)
+{
+	// r1 el nayem , r2 el tweel
+
+	Rect r;
+
+	// Width
+
+	r.w = r1.w +r2.w;
+
+	if (r.w < r3.w + r4.w + r2.w)
+		r.w = r3.w + r4.w + r2.w;
+
+
+	// Hieght
+
+	r.h = r2.h;
+
+	if (r1.h + r3.h > r.h)
+		r.h = r1.h + r3.h;
+
+	if (r1.h + r4.h > r.h)
+		r.h = r1.h + r4.h;
+
+
+
+	//if (r.w == 24 || r.h == 24)
+	//{
+	//	cout << "case 3" << endl;
+	//	cout << "w : " << r.w << " h : " << r.h << endl;
+	//}
+
+	return r;
+}
+
+Rect case4(Rect r1,Rect r2,Rect r3,Rect r4)
+{
+	// r1 w r2 foo2 b3d
+
+	Rect r;
+
+	// hieght
+	r.h = r1.h + r2.h;
+
+	if (r3.h > r.h)
+		r.h = r3.h;
+
+	if (r4.h > r.h)
+		r.h = r4.h;
+
+	// Width
+
+	r.w = r1.w;
+
+	if (r2.w > r.w)
+		r.w = r2.w;
+
+	r.w += r3.w + r4.w;
+
+	//if (r.w == 24 || r.h == 24) 	
+	//{
+	//	cout << "case 4" << endl;
+	//	cout << "w : " << r.w << " h : " << r.h << endl;
+	//}
+
+	return r;
+}
+
+Rect case6(Rect r1,Rect r2,Rect r3,Rect r4)
+{
+	// 3 4
+	// 1 2
+
+	Rect r;
+
+	r.h = max(r1.h+r3.h,r2.h+r4.h);
+
+
+	// Width -> 5 cases
+
+	if (r1.h == r2.h)
+	{
+		r.w = max(r1.w+r2.w,r3.w+r4.w);
+	}
+
+	else if ( r1.h > r2.h )
+	{
+		if ( r1.h >= r2.h + r4.h )
+		{
+			r.w = max(r3.w,r1.w + max(r2.w,r4.w) );
+		}
+
+		else if ( r1.h < r2.h + r4.h )
+		{
+			r.w = max( r1.w+r2.w,max(r1.w+r4.w,r3.w+r4.w) );
+		}
+
+	}
+
+	else if ( r2.h > r1.h ) // HERE
+	{
+		if ( r2.h >= r1.h + r3.h )
+		{
+			r.w = max(r4.w,r2.w + max(r3.w,r1.w) );
+		}
+
+		else if ( r2.h < r1.h + r3.h )
+		{
+			r.w = max( r3.w+r4.w,r2.w+ max(r1.w,r3.w) );
+		}
+	}
+
+	return r;
+}
+
+
+void add(Rect r,vector<Rect>& rects)
+{
+	/*if (r.h == 35 || r.w == 35 )
+		cout << r.h << " " << r.w << endl;*/
+
+	if ( r.h*r.w < rects.front().h*rects.front().w)
+	{
+		rects.clear();
+		rects.push_back(r);
+	}
+	else if ( r.h*r.w == rects.front().h*rects.front().w)
+	{
+		bool flag = true;
+
+		for (int index=0;index<rects.size();index++)
+		{
+			if (rects[index].h == r.h || rects[index].h == r.w)
+			{
+				flag = false;
+				break;
+			}
+		}
+
+		if(flag)
+			rects.push_back(r);
+	}
+
+}
+
+ 
+int main ()
+{
+	Rect rec[4];
+	vector<Rect> rects;
+
+	Rect dummy;
+	dummy.h = 100;
+	dummy.w = 100;
+
+	rects.push_back(dummy);
+
+	for (int i=0;i<4;i++)
+	{
+		cin >> rec[i].h >> rec[i].w;
+	}
+
+	for (int i=0;i<4;i++)
+	{
+		for (int j=0;j<4;j++)
+		{
+			if (j==i)
+				continue;
+
+			for (int k=0;k<4;k++)
+			{
+				if (k==j || k==i)
+					continue;
+
+				for (int l=0;l<4;l++)
+				{
+					if (l==k || l==j || l==i)
+						continue;
+
+					for (int m=0;m<2;m++)
+					{
+						for (int n=0;n<2;n++)
+						{
+							for (int o=0;o<2;o++)
+							{
+								for (int p=0;p<2;p++)
+								{
+									Rect r1,r2,r3,r4;
+
+									if (m)
+									{
+										r1.h = rec[i].h;
+										r1.w = rec[i].w;
+									}
+									else
+									{
+										r1.h = rec[i].w;
+										r1.w = rec[i].h;
+									}
+
+									if (n)
+									{
+										r2.h = rec[j].h;
+										r2.w = rec[j].w;
+									}
+									else
+									{
+										r2.h = rec[j].w;
+										r2.w = rec[j].h;
+									}
+
+									if (o)
+									{
+										r3.h = rec[k].h;
+										r3.w = rec[k].w;
+									}
+									else
+									{
+										r3.h = rec[k].w;
+										r3.w = rec[k].h;
+									}
+
+									if (p)
+									{
+										r4.h = rec[l].h;
+										r4.w = rec[l].w;
+									}
+									else
+									{
+										r4.h = rec[l].w;
+										r4.w = rec[l].h;
+									}
+
+									Rect r = case1(r1,r2,r3,r4);
+									add(r,rects);
+									
+									r = case2(r1,r2,r3,r4);
+									add(r,rects);
+									
+									r = case3(r1,r2,r3,r4);
+									add(r,rects);
+									
+									r = case4(r1,r2,r3,r4);
+									add(r,rects);
+
+									r = case4(r1,r2,r3,r4);
+									add(r,rects);
+
+									r = case6(r1,r2,r3,r4);
+									add(r,rects);
+								}
+							}
+						}
+					}
+
+				}
+			}
+		}
+	}
+
+	for (int index=0;index<rects.size();index++)
+	{
+		if(rects[index].w > rects[index].h)
+		{
+			int temp = rects[index].h;
+			rects[index].h = rects[index].w;
+			rects[index].w = temp;
+		}
+	}
+
+	sort(rects.begin(),rects.end(),pred);
+
+	cout << rects.front().h*rects.front().w << endl;
+	
+	for (int index=0;index<rects.size();index++)
+		cout << rects[index].w << " " << rects[index].h << endl;
+
+
+	return 0;
+}

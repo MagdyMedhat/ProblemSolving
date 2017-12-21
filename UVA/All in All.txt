@@ -1,0 +1,48 @@
+
+// 10340 - All in All - UVA
+
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+
+bool SubSequence(string& subStr,string& str,int s1,int s2)
+{
+	if (s1 == 0) // subsequence is finished
+		return true;
+
+	else if ( s2 == 0) // str is finished 
+		return false;
+
+	else
+	{
+		if (str[s2-1] == subStr[s1-1])
+			return SubSequence(subStr,str,s1-1,s2-1);
+	
+		else
+			return SubSequence(subStr,str,s1,s2-1);
+	}
+}
+
+int main ()
+{
+	string s1,s2;
+
+	while ( cin >> s1 >> s2 )
+	{
+		if ( SubSequence(s1,s2,s1.size(),s2.size()) )
+			cout << "Yes" << endl;
+
+		else
+			cout << "No" << endl;
+	}
+
+	
+	return 0;
+}

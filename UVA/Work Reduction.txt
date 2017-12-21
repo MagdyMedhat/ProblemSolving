@@ -1,0 +1,131 @@
+
+// UVA - 10670 - Work Reduction
+
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <algorithm>
+
+using namespace std;
+
+struct Agency
+{
+	string name;
+	int A;
+	int B;
+	int maxCost;
+};
+
+bool Pred(Agency a1,Agency a2)
+{
+	if (a1.maxCost < a2.maxCost)
+		return true;
+
+	else if (a1.maxCost == a2.maxCost)
+	{
+		if (a1.name.compare(a2.name) == -1)
+			return true;
+	}
+
+	return false;
+}
+
+int StringToInt(string& str)
+{
+	int number;
+	stringstream ss(str);
+	ss >> number;
+	return number;
+}
+
+void ParseInput(string& str,Agency& agency)
+{
+	int pos1 = str.find(":");
+	int pos2 = str.find(",");
+
+	string temp = "";
+	for (int i=0;i<pos1;i++)
+		temp += str[i];
+
+	agency.name = temp;
+	
+	temp = "";
+	for (int i=pos1+1;i<pos2;i++)
+		temp += str[i];
+
+	agency.A = StringToInt(temp);
+	
+	temp = "";
+	for (int i=pos2+1;i<str.size();i++)
+		temp += str[i];
+
+	agency.B = StringToInt(temp);
+}
+
+
+int WorkReduction(int total,int goal,int A,int B)
+{
+	int cost = 0;
+	bool foundZero = false;
+
+	if (goal == 0)
+	{
+		foundZero = true;
+		goal++;
+	}
+
+	while (total/2 >= goal)
+	{
+		int r1 = B;
+		int r2 = ( total - (total/2) ) * A;
+
+		cost += min(r1,r2);
+		total /= 2;
+	}
+
+	if (foundZero)
+		goal--;
+
+	cost += (total-goal) * A;
+
+	return cost;
+}
+
+int main()
+{
+	freopen("input.txt", "r", stdin);
+
+	int cases;
+	cin >> cases;
+
+	Agency agences[100];
+
+	for (int c=0;c<cases;c++)
+	{
+		int N;
+		int M;
+		int L;
+
+		cin >> N >> M >> L;
+
+		string input;
+
+		for (int i=0;i<L;i++)
+		{
+			cin >> input;
+			ParseInput(input,agences[i]);
+		}
+
+		for (int i=0;i<L;i++)
+			agences[i].maxCost = WorkReduction(N,M,agences[i].A,agences[i].B);
+
+		sort(agences,agences+L,Pred);
+
+		cout << "Case " << c+1 << endl;
+
+		for (int i=0;i<L;i++)
+			cout << agences[i].name << " " << agences[i].maxCost << endl;
+	}
+
+	return 0;
+}

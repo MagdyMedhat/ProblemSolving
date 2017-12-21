@@ -1,0 +1,140 @@
+
+// problem 118 - Mutant Flatworld Explorers - UVA
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+void getNxtDir(const char &dir , char &ori)
+{
+	if (ori == 'N')
+	{
+		if (dir == 'R')
+			ori = 'E';
+
+		else if (dir == 'L')
+			ori = 'W';
+	}
+	
+	else if (ori == 'W')
+	{
+		if (dir == 'R')
+			ori = 'N';
+
+		else if (dir == 'L')
+			ori = 'S';
+	}
+
+	else if (ori == 'S')
+	{
+		if (dir == 'R')
+			ori = 'W';
+
+		else if (dir == 'L')
+			ori = 'E';
+	}
+
+	else if (ori == 'E')
+	{
+		if (dir == 'R')
+			ori = 'S';
+
+		else if (dir == 'L')
+			ori = 'N';
+	}
+}
+
+void move(int &x , int &y ,const char &ori)
+{
+	if ( ori == 'N')
+		y++;
+	else if ( ori == 'W')
+		x--;
+	else if ( ori == 'E')
+		x++;
+	else if ( ori == 'S')
+		y--;
+}
+
+int main()
+{
+	int x;
+	int y;
+	bool grid[50][50];
+
+	cin >> x >> y;
+
+	for (int i=0;i<=x;i++)
+	{
+		for (int j=0;j<=y;j++)
+			grid[i][j] = true;
+	}
+
+	int posX;
+	int posY;
+	char ori;
+
+	while ( cin >> posX >> posY >> ori )
+	{
+		string inst;
+		cin >> inst;
+		
+		bool lost = false;
+		
+		int prevX;
+		int prevY;
+		char prevOri;
+
+		for (int i=0;i<=inst.size();i++)
+		{
+			if ( (posX <= x && posX >= 0) && (posY <= y && posY >= 0) ) // STILL ON GRID
+			{
+				if ( inst[i] == 'F' )
+				{
+					if ( grid[posX][posY] == false ) //  if found a scent
+					{
+						if ( ( (ori == 'N') && (posY == y) ) || ( (ori == 'S') && (posY == 0) ) || ( (ori == 'W') && (posX == 0) ) || ( (ori == 'E') && (posX == x) ) )
+							continue;
+					}
+
+					prevX = posX;
+					prevY = posY;
+					move(posX,posY,ori);
+
+				}
+				
+				else
+				{
+					prevOri = ori;
+					getNxtDir(inst[i],ori);
+				}
+			}
+
+			else // ROBOT LOST
+			{
+				lost = true;
+				grid[prevX][prevY] = false;
+				posX = prevX;
+				posY = prevY;
+				break;
+			}
+		}
+		cout << posX;
+		cout << " ";
+		cout << posY;
+		cout << " ";
+		cout << ori;
+
+		if (lost)
+			cout << " LOST";
+
+		cout << endl;
+	}
+
+	return 0;
+}

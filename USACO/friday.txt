@@ -1,0 +1,71 @@
+/*
+ID: magdyme1
+PROG: friday
+LANG: C++
+*/
+
+// problem - Friday - USACO 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+ifstream fin("friday.in");
+ofstream fout("friday.out");
+
+#define cin fin
+#define cout fout
+
+int CheckIfLeap(const int p_year)
+{
+	if (p_year%100 != 0 && p_year%4 ==0)
+	{
+		return 29;
+
+	}
+
+	else if ( p_year%100 == 0 && p_year%400==0)
+	{
+		return 29;
+	}
+
+	return 28;
+}
+
+int main()
+{
+	int dayCounter[7] = {0}; // Mon , Tue , Wed , Thurs , Fri , Sat , Sun.
+	int month[12] = {31,28,31,30,31,30,31,31,30,31,30,31}; // Jan , Feb , March , April , May , June ,Fuly , Aug , Sept , Oct , Nov , Dec.
+	int year = 1900;
+	int N;
+	int days = 0;
+
+	while (cin >> N)
+	{
+
+		for (int i=0;i<N;i++)
+		{
+			month[1] = CheckIfLeap(year);
+
+			for (int j=0;j<12;j++)
+			{
+				int index = ( (days + 13) % 7 ) - 1;
+
+				if ( index == -1)
+				{
+					index = 6;
+				}
+
+				dayCounter[index]++;
+				days += month[j];
+			}
+
+			year++;
+		}
+
+		cout << dayCounter[5] << " " << dayCounter[6] << " " << dayCounter[0] << " " << dayCounter[1] << " " << dayCounter[2] << " " << dayCounter[3] << " " << dayCounter[4] << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,167 @@
+/*
+ID: magdyme1
+PROG: transform
+LANG: C++
+*/
+
+// problem - transform - USACO 
+
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+ifstream fin("transform.in");
+ofstream fout("transform.out");
+
+#define cin fin
+#define cout fout
+
+
+bool Rotate90(char square[10][10],char pattern[10][10],int size)
+{
+		for(int col=0,i=0;col<size;col++,i++)
+		{
+			for(int row=size-1,j=0;row>=0;row--,j++)
+			{
+				if (square[row][col] != pattern[i][j])
+					return false;
+			}
+		}
+
+		return true;
+}
+bool Rotate180(char square[10][10],char pattern[10][10],int size)
+{
+		for(int row=size-1,i=0;row>=0;row--,i++)
+		{
+			for(int col=size-1,j=0;col>=0;col--,j++)
+			{
+				if (square[row][col] != pattern[i][j])
+					return false;
+			}
+		}
+
+		return true;
+}
+
+bool Rotate270(char square[10][10],char pattern[10][10],int size)
+{
+		for(int col=size-1,i=0;col>=0;col--,i++)
+		{
+			for(int row=0,j=0;row<size;row++,j++)
+			{
+				if (square[row][col] != pattern[i][j])
+					return false;
+			}
+		}
+
+		return true;
+}
+
+bool Reflect(char square[10][10],char pattern[10][10],int size)
+{
+	int mid = size/2;
+
+		for(int row=0;row<size;row++)
+		{
+			for(int col=0;col<mid;col++)
+			{
+				char temp = square[row][col];
+				square [row][col] = square[row][size-1-col];
+				square[row][size-1-col] = temp;
+			}
+		}
+
+		for(int row=0;row<size;row++)
+		{
+			for(int col=0;col<size;col++)
+			{
+				if (square[row][col] != pattern[row][col])
+					return false;
+			}
+		}
+
+		return true;
+}
+bool Combination(char square[10][10],char pattern[10][10],int size)
+{
+	if ( Rotate90(square,pattern,size) || Rotate180(square,pattern,size) || Rotate270(square,pattern,size) )
+		return true;
+
+	else
+		return false;
+
+}
+
+bool Normal(char square[10][10],char pattern[10][10],int size)
+{
+		for(int row=0;row<size;row++)
+		{
+			for(int col=0;col<size;col++)
+			{
+				if (square[row][col] != pattern[row][col])
+					return false;
+			}
+		}
+
+		return true;
+}
+
+int main()
+{
+	int N;
+	char square[10][10];
+	char cpy [10][10];
+	char pattern[10][10];
+	
+	while (cin >> N)
+	{
+		for(int row=0;row<N;row++)
+		{
+			for(int col=0;col<N;col++)
+			{
+				cin >> square[row][col];
+				cpy[row][col] = square[row][col];
+			}
+		}
+
+		for(int row=0;row<N;row++)
+		{
+			for(int col=0;col<N;col++)
+			{
+				cin >> pattern[row][col];
+			}
+		}
+
+		if ( Rotate90(square,pattern,N) )
+		{
+			cout << "1" << endl;
+		}
+		else if ( Rotate180(square,pattern,N) )
+		{
+			cout << "2" << endl;
+		}
+		else if ( Rotate270(square,pattern,N) )
+		{
+			cout << "3" << endl;
+		}
+		else if ( Reflect(square,pattern,N) )
+		{
+			cout << "4" << endl;
+		}
+		else if ( Combination(square,pattern,N) )
+		{
+			cout << "5" << endl;
+		}
+		else if ( Normal(cpy,pattern,N) )
+		{
+			cout << "6" << endl;
+		}
+		else
+		{
+			cout << "7" << endl;
+		}
+	}
+
+	return 0;
+}

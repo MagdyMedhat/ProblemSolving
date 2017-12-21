@@ -1,0 +1,114 @@
+
+// 706
+
+#include <iostream>
+#include <string>
+using namespace std; 
+
+void fun1(const string &input,const int &strSize,const int &size,const bool hor[])
+{
+	
+		for(int i=0;i<strSize;i++)
+		{
+			cout << " ";
+			
+			if ( hor[ input[i] - '0' ] == true )
+			{
+				for(int j=0;j<size;j++)
+					cout << "-";
+			}
+
+			else if ( hor[ input[i] - '0' ] == false )
+			{
+				for(int j=0;j<size;j++)
+					cout << " ";
+			}
+
+			cout << " ";
+
+			if(i == strSize-1)
+				continue;
+
+			cout << " "; // Space between each degit
+		}
+		cout << endl;
+}
+
+void fun2(const string &input,const int &strSize,const int &size,const int ver[])
+{
+		for(int i=0;i<size;i++)
+		{
+			for(int j=0;j<strSize;j++)
+			{
+				if ( ver[ input[j] - '0' ] == 0 )
+				{
+					cout << " ";
+					
+					for(int k=0;k<size;k++)
+						cout << " ";
+					
+					cout << "|";
+				}
+
+				else if ( ver[ input[j] - '0' ] == 1 )
+				{
+					cout << "|";
+					
+					for(int k=0;k<size;k++)
+						cout << " ";
+					
+					cout << "|";
+				}
+
+				else if ( ver[ input[j] - '0' ] == 2 )
+				{
+					cout << "|";
+					
+					for(int k=0;k<size;k++)
+						cout << " ";
+
+					cout << " ";
+				}
+
+				if(j == strSize-1)
+					continue;
+				
+				cout << " "; // space between each degit
+			}
+			cout << endl;
+		}
+}
+
+int main ()
+{
+	// 3 conditions  0=> |       1=>| |       2=>| 
+
+	bool hor_part1[10] = { true,false,true,true,false,true,true,true,true,true };
+	int top_part[10] = { 1 , 0 , 0 , 0 , 1 , 2 , 2 , 0 , 1 , 1 };
+	bool hor_part2[10] = { false,false,true,true,true,true,true,false,true,true };
+	int buttom_part[10] = { 1 , 0 , 2 , 0 , 0 , 0 , 1 , 0 , 1 , 0 };
+	bool hor_part3[10] = { true,false,true,true,false,true,true,false,true,true };
+
+	string input;
+	int size;
+	int strSize;
+
+	cin >> size >> input;
+
+	while ( (size != 0)  )
+	{
+		strSize = input.size();
+
+		fun1(input,strSize,size,hor_part1);
+		fun2(input,strSize,size,top_part);
+		fun1(input,strSize,size,hor_part2);
+		fun2(input,strSize,size,buttom_part);
+		fun1(input,strSize,size,hor_part3);
+
+		cout << endl;
+
+		cin >> size >> input;
+	}
+
+	return 0;
+}

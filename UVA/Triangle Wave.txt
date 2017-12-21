@@ -1,0 +1,48 @@
+
+// ACM problem - UVA - 488 Triangle Wave
+
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+int main()
+{
+	int n,x,y;
+	cin >> n;
+
+	for (int cases=0;cases<n;cases++)
+	{
+		if (cases)
+			cout << endl;
+
+		cin >> x;
+		cin >> y;
+
+		for (int i=0;i<y;i++)
+		{
+			for (int j=1;j<=x;j++)
+			{
+				for (int k=0;k<j;k++)
+					cout << j;
+
+				cout << endl;
+			}
+			
+			for (int j=x-1;j>0;j--)
+			{				
+				for (int k=0;k<j;k++)
+					cout << j;
+				
+				cout << endl;
+			}
+
+			if (i < y-1)
+				cout << endl;
+		}
+	}
+
+	return 0;
+}

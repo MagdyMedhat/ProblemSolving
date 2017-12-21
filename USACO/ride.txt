@@ -1,0 +1,73 @@
+/*
+ID: magdyme1
+PROG: ride
+LANG: C++
+*/
+
+// problem - ride - USACO 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+ifstream fin("ride.in");
+ofstream fout("ride.out");
+
+#define cin fin
+#define cout fout
+
+int main()
+{
+	// A = 65
+	// Z = 90
+
+	const int SIZE = 7;
+	char comet[SIZE];
+	char group[SIZE];
+
+	while (cin >> comet >> group)
+	{
+		int cometCount = 1;
+		int groupCount = 1;
+
+		for (int i=0;i<SIZE;i++)
+		{
+			if ( comet[i] )
+			{
+				int num1 = ( (int)comet[i] - 64);
+				cometCount *= num1;
+			}
+			else
+			{
+				break;
+			}
+		}
+		
+		for (int i=0;i<SIZE;i++)
+		{
+			if ( group[i] )
+			{
+				int num2 = ( (int)group[i] - 64);
+				groupCount *= num2;
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		if (cometCount % 47 == groupCount % 47)
+		{
+			cout << "GO" << endl;
+		}
+
+		else
+		{
+			cout << "STAY" << endl;
+		}
+	}
+
+	return 0;
+}

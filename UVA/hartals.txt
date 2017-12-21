@@ -1,0 +1,45 @@
+// hartals UVA  10050
+
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+int main()
+{
+	int cases;
+	cin >> cases;
+
+	for( int i=0;i<cases;i++)
+	{
+		int days;
+		cin >> days;
+
+		int party;
+		cin >> party;
+		
+		bool used[3700] = {false};
+		int lost = 0;
+
+		for (int j=0;j<party;j++)
+		{
+			int hartal;
+			cin >> hartal;
+
+			for (int k=hartal;k<=days;k+=hartal)
+			{
+				if ( k%7 != 0 && (k+1)%7 != 0 && !used[k] )
+				{
+					lost++;
+					used[k] = true;
+				}
+			}
+		}
+		cout << lost << endl;
+	}
+
+	return 0;
+}

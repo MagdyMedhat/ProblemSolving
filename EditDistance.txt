@@ -1,0 +1,142 @@
+
+// EditDistance - D&C  and DP
+
+#include <iostream>
+#include <string>
+#include <fstream>
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+int EditDistance(string& str1,string& str2,int s1,int s2)
+{
+	if (s1 == 0) // insert rest of places
+		return s2;
+
+	else if (s2 == 0) // delete rest of places
+		return s1;
+
+	if ( str1[s1-1] == str2[s2-1] )
+		return EditDistance(str1,str2,s1-1,s2-1);
+
+	else
+	{
+		int R1 = 1 + EditDistance(str1,str2,s1-1,s2-1); // replace
+		int R2 = 1 + EditDistance(str1,str2,s1,s2-1); // insert
+		int R3 = 1 + EditDistance(str1,str2,s1-1,s2); // delete
+
+		return min(R1 , min(R2,R3) );
+	}
+}
+
+int DP[5+1][5+1];
+
+int EditDistance_DP(string& str1,string& str2,int s1,int s2)
+{
+	for (int i=0;i<=s1;i++)
+	{
+		for (int j=0;j<=s2;j++)
+		{
+			if (i == 0)
+				DP[i][j] = j;
+
+			else if (j == 0)
+				DP[i][j] = i;
+
+			else if ( str1[i-1] == str2[j-1] )
+				DP[i][j] = DP[i-1][j-1];
+
+			else
+			{
+				int R1 = 1 + DP[i-1][j-1]; // replace
+				int R2 = 1 + DP[i][j-1]; // insert
+				int R3 = 1 + DP[i-1][j]; // delete
+
+				DP[i][j] =  min(R1 , min(R2,R3) );
+			}
+		}
+	}
+
+	return DP[s1][s2];
+}
+
+string BackTrace(string& str1,string& str2,int s1,int s2)
+{
+	if (s1 == 0) // insert rest of places
+	{
+		string temp = "";
+
+		for (int i=0;i<s2;i++)
+			temp += "Insert ";
+
+		return temp;
+			
+	}
+
+	if (s2 == 0) // Delete rest of places
+	{
+		string temp = "";
+
+		for (int i=0;i<s1;i++)
+			temp += "Delete ";
+
+		return temp;
+			
+	}
+
+	if ( str1[s1-1] == str2[s2-1] )
+		return BackTrace(str1,str2,s1-1,s2-1);
+
+	else
+	{
+		if ( (DP[s1-1][s2-1] <= DP[s1][s2-1]) && (DP[s1-1][s2-1] <= DP[s1-1][s2]) )
+			return "Replace " + BackTrace(str1,str2,s1-1,s2-1);
+		
+		else if ( (DP[s1][s2-1] <= DP[s1-1][s2-1]) && (DP[s1][s2-1] <= DP[s1-1][s2]) )
+			return "Insert " + BackTrace(str1,str2,s1,s2-1);
+
+		else if ( (DP[s1-1][s2] <= DP[s1-1][s2-1]) && (DP[s1-1][s2] <= DP[s1][s2-1]) )
+			return "Delete " + BackTrace(str1,str2,s1-1,s2);
+
+	}
+}
+
+void DisplayTable(string& str1,string& str2)
+{
+	cout << "  - ";
+
+	for (int j=0;j<=str2.size();j++)
+		cout << str2[j] << " ";
+	
+	cout << endl;
+
+	for (int i=0;i<=str1.size();i++)
+	{
+		if (i==0)
+			cout << "- ";
+		else
+			cout << str1[i-1] << " ";
+
+		for (int j=0;j<=str2.size();j++)
+			cout << DP[i][j] << " ";
+
+		cout << endl;
+	}
+}
+
+int main ()
+{
+	string str1 = "magdy";
+	string str2 = "maged";
+
+	//int minimumNumberOfChanges = EditDistance(str1,str2,str1.size(),str2.size());
+	int minimumNumberOfChanges = EditDistance_DP(str1,str2,str1.size(),str2.size());
+	cout << minimumNumberOfChanges << endl;
+
+	DisplayTable(str1,str2);
+
+	cout << BackTrace(str1,str2,str1.size(),str2.size()) << endl;
+
+	return 0;
+}

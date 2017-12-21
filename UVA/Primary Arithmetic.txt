@@ -1,0 +1,51 @@
+
+// problem 10035 - Primary Arithmetic - UVA 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+void getCarryCount(int n1,int n2,bool carry,int &count)
+{
+	if (n1 == 0 && n2 == 0)
+		return;
+	
+	int sum = n1%10 + n2%10;  // CASE of 1 Digit !!!!
+
+	if (carry)
+		sum++;
+
+	if ( sum > 9)
+		getCarryCount(n1/10,n2/10,true,++count);
+	else
+		getCarryCount(n1/10,n2/10,false,count);
+}
+
+int main()
+{
+	int num1,num2;
+	int counter;
+
+	while ( ( cin >> num1 >> num2 ) && ( num1 != 0 || num2 != 0 ) )
+	{
+		counter = 0;
+		getCarryCount(num1,num2,false,counter);
+
+		if (counter == 0)
+			cout << "No carry operation." << endl;
+
+		else if (counter == 1)
+		cout << "1 carry operation." << endl;
+
+		else if ( counter > 1 )
+		cout << counter << " carry operations." << endl;
+	}
+
+	return 0;
+
+}

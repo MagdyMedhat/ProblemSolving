@@ -1,0 +1,40 @@
+
+// problem 10783 - Odd Sum - UVA 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+
+int main()
+{
+	int T;
+	cin >> T;
+	
+	int start;
+	int end;
+	int total;
+
+	for (int i=1;i<=T;i++)
+	{
+		cin >> start >> end;
+
+		if (start%2 == 0)
+			start++;
+
+		if (end%2 == 0)
+			end--;
+
+		total = 0;
+
+		for (int j=start;j<=end;j=j+2)
+			total+= j;
+
+		cout << "Case " << i << ": " << total << endl;
+	}
+}

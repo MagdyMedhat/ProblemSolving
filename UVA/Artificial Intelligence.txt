@@ -1,0 +1,179 @@
+
+// UVA - 537 - Artificial Intelligence
+// Set fixed float  points precision
+
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+bool power(string s,int& pos)
+{
+	int p = s.find("P=");
+
+	if ( p == string::npos)
+	{
+		pos = -1;
+		return false;
+	}
+
+	else
+	{
+		pos = p;
+		return true;
+	}
+}
+bool voltage(string s,int& pos)
+{
+	int p = s.find("U=");
+
+	if ( p == string::npos)
+	{
+		pos = -1;
+		return false;
+	}
+
+	else
+	{
+		pos = p;
+		return true;
+	}
+}
+
+bool current(string s,int& pos)
+{
+	int p = s.find("I=");
+
+	if ( p == string::npos)
+	{
+		pos = -1;
+		return false;
+	}
+
+	else
+	{
+		pos = p;
+		return true;
+	}
+}
+
+
+double StringToDouble(string s)
+{
+	double value;
+	char symbol;
+
+	if (s[0] == '-')
+	{
+		string temp = "";
+
+		for(int i=1;i<s.size();i++)
+			temp += s[i];
+
+		s = temp;
+	}
+
+	stringstream ss(s);
+	ss >> value >> symbol;
+
+	if (symbol == 'M')
+		value *= 1000000;
+
+	else if (symbol == 'm')
+		value /= 1000;
+
+	else if (symbol == 'k')
+		value *= 1000;
+
+	return value;
+}
+
+
+int main()
+{
+	int N;
+	cin >> N;
+	cin.ignore();
+
+	for(int i=0;i<N;i++)
+	{
+		if ( i )
+			cout << endl;
+
+		string str;
+		getline(cin,str);
+
+		cout << "Problem #" << i+1 << endl;
+
+		int pPos;
+		int vPos;
+		int cPos;
+
+		bool p = power(str,pPos);
+		bool v = voltage(str,vPos);
+		bool c = current(str,cPos);
+
+		if ( p && v )
+		{
+			string pwr = "";
+			string vlt = "";
+
+			for (int i=pPos+2; str[i] != 'W' ;i++)
+				pwr += str[i];
+			
+			for (int i=vPos+2; str[i] != 'V' ;i++)
+				vlt += str[i];
+
+			double pwrValue = StringToDouble(pwr);
+			double vltValue = StringToDouble(vlt);
+
+			cout << "I=" << setiosflags(ios::fixed) << setprecision(2) << pwrValue/vltValue << "A" << endl;
+		}
+
+		else if ( p && c )
+		{
+			string pwr = "";
+			string crnt = "";
+
+			for (int i=pPos+2; str[i] != 'W' ;i++)
+				pwr += str[i];
+			
+			for (int i=cPos+2; str[i] != 'A' ;i++)
+				crnt += str[i];
+
+			double pwrValue = StringToDouble(pwr);
+			double crntValue = StringToDouble(crnt);
+
+			cout << "U=" << setiosflags(ios::fixed) << setprecision(2) << pwrValue/crntValue << "V" << endl;
+
+		}
+
+		else if ( v && c )
+		{
+			string vlt = "";
+			string crnt = "";
+
+			for (int i=vPos+2; str[i] != 'V' ;i++)
+				vlt += str[i];
+			
+			for (int i=cPos+2; str[i] != 'A' ;i++)
+				crnt += str[i];
+			
+			double vltValue = StringToDouble(vlt);
+			double crntValue = StringToDouble(crnt);
+
+			cout << "P=" << setiosflags(ios::fixed) << setprecision(2) << vltValue*crntValue << "W" << endl;
+		}
+
+
+	}
+
+	cout << endl;
+
+	return 0;
+}

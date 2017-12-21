@@ -1,0 +1,50 @@
+
+// problem 591 - Box of Bricks - UVA 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+
+int main()
+{
+	int n;
+	int input;
+	int counter;
+	int total;
+
+	for ( int set=1;(cin >> n && n != 0);set++)
+	{
+		vector<int> number;
+		total = 0;
+		counter = 0;
+
+		for (int i=0;i<n;i++)
+		{
+			cin >> input;
+			number.push_back(input);
+			total += input;
+		}
+
+		total = total / n;
+
+		for (int i=0;i<n;i++)
+		{
+			int temp = number[i] - total;
+
+			if ( temp  > 0)
+				counter += temp;
+		}
+
+		cout << "Set #" << set << endl;
+		cout << "The minimum number of moves is " << counter << "." << endl;
+		cout << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,129 @@
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+class FallingBall {
+public:
+	int howMany(vector <string>, int);
+};
+
+struct Cells
+{
+	int x;
+	int y;
+};
+
+int Memo[40][40];
+
+int BT(int x,int y,vector<Cells> row,int h);
+
+int GetCell(int x,int y,vector<Cells> row,int h)
+{
+	if (Memo[x][y] == -1)
+		Memo[x][y] = BT(x,y,row,h);
+
+	return Memo[x][y];
+}
+
+int BT(int x,int y,vector<Cells> row,int h)
+{
+	int con = -1;
+
+	for (int i=0;i<row.size();i++)
+	{
+		if (y == row[i].y)
+		{
+			con = 0;
+
+			if (x == row[i].x)
+			{
+				con++;
+				break;
+			}
+		}
+	}
+
+	if (con == 0)
+		return 0;
+
+	if ( h-1 == y)
+		return 1;
+
+	int r1 = GetCell(x,y+1,row,h);
+	int r2 = GetCell(x+1,y+1,row,h);
+
+	return r1+r2;
+
+}
+int FallingBall::howMany(vector <string> cells, int n)
+{
+	for (int i=0;i<40;i++)
+	{
+		for (int j=0;j<40;j++)
+		{
+			Memo[i][j] = -1;
+		}
+	}
+
+	vector<Cells> v;
+	bool takenY[40] = {false};
+	bool takenX[40] = {false};
+
+	for (int i=0;i<cells.size();i++)
+	{
+		stringstream ss(cells[i]);
+		Cells temp;
+		ss >> temp.y >> temp.x;
+		
+		if (!takenX[temp.x] && takenY[temp.y])
+			return 0;
+
+		else
+		{
+			takenY[temp.y] = true;
+			takenX[temp.x] = true;
+		}
+
+		v.push_back(temp);
+	}
+
+	return BT(0,0,v,n);
+}
+
+
+int main()
+{
+	string koko[] = {"0 0","0 0"};
+	vector<string> kok(koko, koko + 2);
+	FallingBall M;
+	M.howMany(kok, 5);
+
+	for (int i=0;i<5;i++)
+	{
+		for (int j=0;j<5;j++)
+		{
+			cout << Memo[i][j] << " ";
+		}
+
+		cout << endl;
+	}
+
+	return 0;
+}

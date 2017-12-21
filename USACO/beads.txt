@@ -1,0 +1,229 @@
+/*
+ID: magdyme1
+PROG: beads
+LANG: C++
+*/
+
+
+
+// problem - beads - USACO 
+
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+ifstream fin("beads.in");
+ofstream fout("beads.out");
+
+#define cin fin
+#define cout fout
+
+int main()
+{
+	int N;
+	char arr[350];
+
+	while ( cin >> N)
+	{
+
+		// input the necklace
+		for(int i=0;i<N;i++)
+		cin >> arr[i];
+
+
+		// initialize with first character
+		int firstPosition = 0;
+		char temp = arr[firstPosition];
+
+		int count = 0;
+		// check for start position from the end
+		for(int i=N-1;i>=0;i--)
+		{
+			if ( temp != 'w')
+			{
+				if ( arr[i] == temp || arr[i] == 'w')
+				{
+					firstPosition = i;
+				}
+				else
+					break;
+			}
+
+			else if (temp == 'w')
+			{
+				if (arr[i] != 'w')
+				{
+					temp = arr[i];
+					firstPosition = i;
+				}
+			}
+
+			count++;
+		}
+
+		// if [0] position was W then save the  color found later 
+		if (temp == 'w')
+		{
+			temp = arr[firstPosition];
+		}
+
+		
+		int lastPosition = firstPosition;
+
+		// one color only
+		if (count == N)
+		{
+			lastPosition = count-1;
+		}
+
+		// get last position
+		else
+		{
+			for (int i=(firstPosition+1)%N;true;i=(i+1)%N)
+			{
+				if(i == firstPosition)
+				{
+					break;
+				}
+
+				if (arr[i] != temp )
+				{
+					if (arr[i] != 'w')
+					{
+						break;
+					}
+				}
+
+				else if (arr[i] == temp )
+				{
+					lastPosition = i;
+				}
+
+			}
+		}
+		
+	//	cout << " First Pos : " << firstPosition << endl;
+	//	cout << " Last Pos : " << lastPosition << endl;
+
+		int c1 = 1;
+
+		for (int i=firstPosition;true;i=(i+1)%N)
+		{
+			if (i==lastPosition)
+				break;
+
+			c1++;
+		}
+
+		int w1 = 0;
+		int pos = (lastPosition+1)%N;
+		bool con = false;
+
+		// one color only
+		if (pos != firstPosition)
+		{
+			con = true;
+
+			for (int i=pos;true;i=(i+1)%N)
+			{
+				if (i == firstPosition)
+				{
+					con = false;
+					break;
+				}
+
+				if( arr[i] == 'w')
+				{
+					w1++;
+				}
+				
+				else if (arr[i] != 'w' && arr[i] != temp)
+				{
+					pos = i;
+					temp = arr[i];
+					break;
+				}
+			}
+		}
+
+		int c2 = 0;
+		int w2 = 0;
+		int max = 0;
+		int end;
+
+		if (pos == (lastPosition+1)%N)
+			end = 0;
+		
+		else
+			end = 1;
+
+		//cout << "pos : " << pos << endl; 
+
+		if ( con )
+		{
+
+			for (int i=pos;true;i=(i+1)%N)
+			{
+				//cout << " iam at : " << i << endl;
+
+
+				if( arr[i] == 'w' && i != firstPosition)
+				{
+						w2++;
+				}
+
+				else if (arr[i] == temp )
+				{
+					c2++;
+
+					if (w2 != 0)
+					{
+						c2 += w2;
+						w2 = 0;
+					}
+				}
+
+				else if (arr[i] != temp && arr[i] != 'w')
+				{
+					temp = arr[i];
+
+					int total = c1 + w1 + c2 + w2;
+					
+
+			/*		cout << " total : " << total << endl;
+					cout << " c1 : " << c1 << endl;
+					cout << " w1 : " << w1 << endl;
+					cout << " c2 : " << c2 << endl;
+					cout << " w2 : " << w2 << endl;*/
+
+					if (total > max)
+						max = total;
+
+					c1 = w1 + c2;
+					w1 = w2;
+					c2 = 1;
+					w2 = 0;
+				}
+
+				if (i == (lastPosition+1)%N)
+				{
+					end++;
+
+					if(end ==2)
+					break;
+				}
+
+				
+			}
+		}
+
+	if ( con )
+	{
+		cout << max << endl;
+	}
+	else
+		cout << c1+w1 << endl;
+}
+	
+	return 0;
+}

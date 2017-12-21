@@ -1,0 +1,46 @@
+
+// problem 11530 - SMS Typing - UVA 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+int main()
+{
+	int n;
+	cin >> n;
+	cin.ignore();
+
+	for (int i=0;i<n;i++)
+	{
+		string input;
+		getline(cin,input);
+		int presses = 0;
+
+		for (int j=0;j<input.size();j++)
+		{
+			if ( input[j] == 'a' || input[j] == 'd' || input[j] == 'g' ||input[j] == 'j' ||input[j] == 'm' ||input[j] == 'p' ||input[j] == 't' ||input[j] == 'w' ||input[j] == ' ' )
+				presses++;
+
+			else if ( input[j] == 'b' || input[j] == 'e' || input[j] == 'h' ||input[j] == 'k' ||input[j] == 'n' ||input[j] == 'q' ||input[j] == 'u' ||input[j] == 'x' )
+				presses += 2;
+			
+			else if ( input[j] == 'c' || input[j] == 'f' || input[j] == 'i' ||input[j] == 'l' ||input[j] == 'o' ||input[j] == 'r' ||input[j] == 'v' ||input[j] == 'y' )
+				presses += 3;
+
+			else if ( input[j] == 's' || input[j] == 'z' )
+				presses += 4;
+		}
+
+		cout << "Case #" << i+1 << ": " << presses << endl;
+	}
+
+	
+
+	return 0;
+}

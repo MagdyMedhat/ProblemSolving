@@ -1,0 +1,67 @@
+
+// 10130 -  SuperSale Problem
+
+#include <iostream>
+#include <string>
+#include <fstream>
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+int KnapSack(int weight[],int cost[],int N,int M)
+{
+	int DP[1001][31];
+
+	for (int i=0;i<=N;i++)
+	{
+		for (int j=0;j<=M;j++)
+		{
+			if (i==0 || j==0)
+				DP[i][j] = 0;
+
+			else if (weight[i-1] > j)
+				DP[i][j] = DP[i-1][j];
+
+			else
+				DP[i][j] =  max( DP[i-1][j - weight[i-1] ] + cost[i-1] , DP[i-1][j] );
+		}
+	}
+
+	return DP[N][M];
+}
+
+int main ()
+{
+	int P[1001];
+	int W[1001];
+
+	int T;
+	cin >> T;
+
+	for (int i=0;i<T;i++)
+	{
+		int N;
+		cin >> N;
+
+		for (int j=0;j<N;j++)
+			cin >> P[j] >> W[j];
+
+		int G;
+		cin >> G;
+
+		int total = 0;
+		int MW;
+
+		for (int j=0;j<G;j++)
+		{
+			cin >> MW;
+			total += KnapSack(W,P,N,MW);
+		}
+
+		cout << total << endl;
+
+	}
+
+	return 0;
+}

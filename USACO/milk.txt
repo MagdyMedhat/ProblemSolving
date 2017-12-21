@@ -1,0 +1,72 @@
+/*
+ID: magdyme1
+PROG: milk
+LANG: C++
+*/
+
+// problem - milk - USACO 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+ifstream fin("milk.in");
+ofstream fout("milk.out");
+
+#define cin fin
+#define cout fout
+
+struct Unit
+{
+	int cent;
+	int milk;
+};
+
+bool pred(Unit u1,Unit u2)
+{
+	return (u1.cent < u2.cent);
+}
+
+int main()
+{
+	int N,M;
+	
+	while (cin >> N >> M)
+	{
+		vector<Unit> farmers;
+		int money = 0;
+
+		for (int i=0;i<M;i++)
+		{
+			Unit input;
+			cin >> input.cent >> input.milk;
+			farmers.push_back(input);
+		}
+		
+		sort(farmers.begin(),farmers.end(),pred);
+
+		for (int i=0;i<M;i++)
+		{
+			if (N == 0)
+				break;
+
+			for(int j=0;j<farmers[i].milk;j++)
+			{
+				if (N != 0)
+				{
+					N--;
+					money += farmers[i].cent;
+				}
+				else
+					break;
+			}
+		}
+
+		cout << money << endl;
+	}
+
+	return 0;
+}

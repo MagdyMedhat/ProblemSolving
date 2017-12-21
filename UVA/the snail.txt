@@ -1,0 +1,56 @@
+
+// problem  573 - The Snail - UVA 
+
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+int main()
+{
+	double hight;
+	double climb;
+	double slide;
+	double fatigue;
+	double perc;
+
+	while (cin >> hight >> climb >> slide >> fatigue)
+	{
+		if ( hight == 0)
+			break;
+		
+		perc = ( climb*(fatigue/100) ); // climb will be sum , fatigue will be the increase
+		fatigue = climb - perc;
+
+		int day = 1;
+		bool pass = true;
+
+		while ( hight >= climb )
+		{
+			climb -= slide;
+
+			if (climb < 0)
+			{
+				pass = false;
+				break;
+			}
+
+			day++;
+			climb += fatigue;
+			fatigue-= perc;
+
+			if (fatigue < 0)
+				fatigue = 0;
+		}
+
+		if(pass)
+			cout << "success on day " << day << endl;
+		else
+			cout << "failure on day " << day << endl;
+	}
+
+	return 0;
+}

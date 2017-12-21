@@ -1,0 +1,106 @@
+/*
+ID: magdyme1
+PROG: dualpal
+LANG: C++
+*/
+
+
+// problem - dualpal - USACO 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+ifstream fin("dualpal.in");
+ofstream fout("dualpal.out");
+
+#define cin fin
+#define cout fout
+
+
+char bound(int num)
+{
+		if (num < 10)
+			return num + '0';
+
+		else
+			return 55 + num;
+}
+
+string Convert(int num,int base)
+{
+	string res = "";
+
+	while ( num >= base)
+	{
+		int carry = num%base;
+
+		res += bound(carry);
+
+		num /= base;
+	}
+
+	res += bound(num);
+
+	return res;
+}
+
+
+bool Pal(string s)
+{
+	int size = s.size();
+
+	for(int i=0;i<size/2;i++)
+	{
+		if ( s[i] != s[size-i-1])
+			return false;
+	}
+
+	return true;
+}
+
+bool DualPal(int n)
+{
+	int count = 0;
+
+	for (int i=2;i<=10;i++)
+	{
+		if ( Pal ( Convert(n,i) ) )
+		{
+			count++;
+		}
+
+		if (count == 2)
+			break;
+	}
+
+	if (count == 2)
+		return true;
+
+	else return false;
+}
+
+int main()
+{
+	int N,S;
+	
+	while (cin >> N >> S)
+	{
+		int count = 0;
+
+		for (int i=S+1;i<=32767;i++)
+		{
+			if ( DualPal(i) )
+			{
+				cout << i << endl;
+				count++;
+			}
+
+			if (count == N)
+				break;
+		}
+	}
+
+	return 0;
+}

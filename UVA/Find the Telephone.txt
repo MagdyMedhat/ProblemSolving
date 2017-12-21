@@ -1,0 +1,46 @@
+
+// problem  10921 - Find the Telephone - UVA 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+char decode(char &x)
+{
+	string arr[10] = {"","","ABC","DEF","GHI","JKL","MNO","PQRS","TUV","WXYZ"};
+
+	for (int i=2;i<10;i++)
+	{
+		for (int j=0;j<arr[i].size();j++)
+		{
+			if (arr[i][j] == x)
+				return i;
+		}
+	}
+}
+
+int main()
+{
+	string input;
+
+	while ( cin >> input )
+	{
+		for (int i=0;i<input.size();i++)
+		{
+			if (input[i] == '0' || input[i] == '1' || input[i] == '-' )
+				continue;
+			
+			else
+				input[i] = decode(input[i]) + '0';
+		}
+
+		cout << input << endl;
+	}
+
+	return 0;
+}

@@ -1,0 +1,121 @@
+
+// 1002 - Minimal Coverage - UVA
+			
+// Algorithm Idea 
+			 /*
+				start with startPivot = 0 - endPivot = 0 
+				if start <= startPivot and end > endPivot
+					if diff of interval > diff of temp
+						temp = interval
+				remove interval from vector
+				put startPivot = interval.end
+				put endPivot = interval.end
+
+			*/
+
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+struct Segment
+{
+	int start;
+	int end;
+};
+
+int main ()
+{
+	int cases;
+	cin >> cases;
+
+	while (cases--)
+	{
+		Segment intervals[100000];
+		bool taken[100000] = {false};
+		vector<Segment> sols;
+
+		int M;
+		cin >> M;
+
+		int x,y;
+		int count;
+
+		for (count=0; cin >> x >> y;count++)
+		{
+			if ( x==0 && y==0)
+				break;
+			
+			Segment temp;
+			temp.start = x;
+			temp.end = y;
+
+			intervals[count] = temp;
+		}
+		//count--;
+
+		int startPivot = 0;
+		int endPivot = 0;
+
+		int indx;
+		for (int i=0;i<count;i++)
+		{
+			indx = 0;
+			bool change = false;
+			
+			Segment temp;
+			temp.start = 0;
+			temp.end = 0;
+
+
+			for (int j=0;j<count;j++)
+			{
+				if (!taken[j])
+				{
+					if (intervals[j].start <= startPivot && intervals[j].end > endPivot)
+					{
+						if (intervals[j].end - startPivot > temp.end - startPivot)
+						{
+							temp = intervals[j];
+							indx = j;
+							change = true;
+						}
+					}
+				}
+			}
+
+			if (change)
+			{
+				taken[indx] = true;
+				sols.push_back(intervals[indx]);
+				startPivot = intervals[indx].end;
+				endPivot = intervals[indx].end;
+			}
+
+			if(endPivot >= M)
+				break;
+		}
+
+		if (endPivot >= M)
+		{
+			cout << sols.size() << endl;
+			
+			for (int i=0;i<sols.size();i++)
+				cout << sols[i].start << " " << sols[i].end << endl;
+
+		}
+
+		else
+			cout << "0" << endl;
+		
+		if (cases)
+				cout << endl;
+	}
+
+	return 0;
+}

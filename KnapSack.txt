@@ -1,0 +1,60 @@
+
+// KnapSack Problem  D & C and DP
+
+#include <iostream>
+#include <string>
+#include <fstream>
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+int KnapSack(int weight[],int cost[],int numOfObjects,int totalWeight)
+{
+	if(numOfObjects==-1 || totalWeight==0)
+		return 0;
+
+	if (weight[numOfObjects] > totalWeight)
+		return KnapSack(weight,cost,numOfObjects-1,totalWeight);
+
+	else if (weight[numOfObjects] <= totalWeight)
+		return max( KnapSack(weight,cost,numOfObjects-1,totalWeight-weight[numOfObjects])+ cost[numOfObjects]
+	               , KnapSack(weight,cost,numOfObjects-1,totalWeight) );
+}
+
+int DP[4+1][5+1]; // +1 for Base case
+
+int KnapSack_DP(int weight[],int cost[],int numOfObjects,int totalWeight)
+{
+	for (int i=0;i<=numOfObjects;i++)
+	{
+		for (int j=0;j<=totalWeight;j++)
+		{
+			if (i==0 || j==0)
+				DP[i][j] = 0;
+
+			else if (weight[i-1] > j)
+				DP[i][j] = DP[i-1][j];
+
+			else
+				DP[i][j] =  max( DP[i-1][j - weight[i-1] ] + cost[i-1] , DP[i-1][j] );
+		}
+	}
+
+	return DP[numOfObjects][totalWeight];
+}
+
+int main()
+{
+	int cost[4] = {3,4,5,6};
+	int weight[4] = {2,3,4,5};
+	int totalWeight = 5;
+
+	//int maxCost = KnapSack(weight,cost,4,totalWeight);
+	int maxCost = KnapSack_DP(weight,cost,4,totalWeight);
+	
+	cout << maxCost << endl;
+
+
+    return 0;
+}

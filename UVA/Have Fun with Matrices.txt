@@ -1,0 +1,156 @@
+
+// problem 11360 - Have Fun with Matrices - UVA 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+int matrix[9][9];
+
+void transpose(int size)
+{
+	int temp;
+
+	for (int row=1;row<=size;row++)
+		{
+			for (int col=row+1;col<=size;col++)
+			{
+				temp = matrix[row-1][col-1];
+				matrix[row-1][col-1] = matrix[col-1][row-1];
+				matrix[col-1][row-1] = temp;
+			}
+
+		}
+}
+						
+void row(int size)
+{
+	int a;
+	int b;
+	int temp;
+	cin >> a;
+	cin >> b;
+	a--;
+	b--;
+
+	for (int col=1;col<=size;col++)
+		{
+			temp = matrix[a][col-1];
+			matrix[a][col-1] = matrix[b][col-1];
+			matrix[b][col-1] = temp;
+		}
+}
+			
+void col(int size)
+{
+	int a;
+	int b;
+	int temp;
+	cin >> a;
+	cin >> b;
+	a--;
+	b--;
+
+	for (int row=1;row<=size;row++)
+		{
+			temp = matrix[row-1][a];
+			matrix[row-1][a] = matrix[row-1][b];
+			matrix[row-1][b] = temp;
+
+		}
+}
+						
+void inc(int size)
+{
+	for (int row=1;row<=size;row++)
+		{
+			for (int col=1;col<=size;col++)
+			{
+				matrix[row-1][col-1]++;
+
+				if( matrix[row-1][col-1] > 9 )
+					matrix[row-1][col-1] = 0;
+			}
+		}
+
+}
+
+void dec(int size)
+{
+	for (int row=1;row<=size;row++)
+		{
+			for (int col=1;col<=size;col++)
+			{
+				matrix[row-1][col-1]--;
+
+				if( matrix[row-1][col-1] < 0 )
+					matrix[row-1][col-1] = 9;
+			}
+		}
+}
+
+int main()
+{
+	int n;
+	cin >> n;
+
+	for (int i=0;i<n;i++)
+	{
+		int m;
+		cin >> m;
+		cin.ignore();
+
+		for (int row=1;row<=m;row++)
+		{
+			string input;
+			getline(cin,input);
+
+			for (int col=1;col<=m;col++)
+				matrix[row-1][col-1] = input[col-1] - '0';
+		}
+
+		int t;
+		cin >> t;
+
+		string op;
+		
+		for (int j=1;j<=t;j++)
+		{
+			cin >> op;
+
+			if (op == "transpose")
+				transpose(m);
+
+			else if (op == "row")
+				row(m);
+
+			else if (op == "col")
+				col(m);
+				
+			else if (op == "inc")
+				inc(m);
+
+			else if (op == "dec")
+				dec(m);
+		}
+
+		cout << "Case #" << i+1 << endl;
+
+		for (int row=1;row<=m;row++)
+		{
+			for (int col=1;col<=m;col++)
+				cout << matrix[row-1][col-1];
+
+			cout << endl;
+		}
+
+		cout << endl;
+	}
+
+	return 0;
+}

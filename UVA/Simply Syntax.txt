@@ -1,0 +1,61 @@
+
+// problem 271 - Simply Syntax - UVA 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+bool syntaxCheck_aux (string str,int index,int &count)
+{
+	count ++;
+
+	if ( (str[index] >= 112) && (str[index] <= 122) )
+		return true;
+
+	else if ( str[index] == 'N' )
+	{
+		if ( syntaxCheck_aux(str,index+1,count) )
+			return true;
+	}
+
+	else if ( (str[index] == 'C') || (str[index] == 'D') || (str[index] == 'E') || (str[index] == 'I') )
+	{
+		if ( ( syntaxCheck_aux (str,index+1,count) ) && ( syntaxCheck_aux(str,index+2,count) ) )
+			return true;
+	}
+
+	else
+		return false;
+}
+
+bool syntaxCheck(string str)
+{
+	int count = 0;
+
+	if ( syntaxCheck_aux(str,0,count) && ( count == str.size() ) )
+		return true;
+
+	else
+		return false;
+}
+
+int main()
+{
+	string input;
+
+	while (cin >> input)
+	{
+		if ( syntaxCheck(input) )
+			cout << "YES" << endl;
+
+		else
+			cout << "NO" << endl;
+	}
+
+	return 0;
+}

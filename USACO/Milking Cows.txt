@@ -1,0 +1,124 @@
+
+// problem - Milking Cows - USACO 
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+ifstream fin("milk2.in");
+ofstream fout("milk2.out");
+
+#define cin fin
+#define cout fout
+
+struct Interval
+{
+	int time;
+	bool start;
+};
+
+bool structCompare(Interval s1,Interval s2)
+{
+	return (s1.time<s2.time);
+}
+
+bool structFind(Interval s1,Interval s2)
+{
+	return ( (s1.time == s2.time) && (s1.start != s2.start) );
+}
+
+int main()
+{
+	int N;
+	
+	while (cin >> N)
+	{
+		vector<Interval> intervals;
+
+		for (int i=0;i<N*2;i++)
+		{
+			int input;
+			bool flag;
+
+			cin >> input ;
+
+			if (i%2==0)
+				flag = true;
+			else
+				flag = false;
+
+			Interval myInterval;
+			myInterval.time = input;
+			myInterval.start = flag;
+				
+			intervals.push_back(myInterval);
+		}
+
+		sort(intervals.begin(),intervals.end(),structCompare);
+
+		vector<Interval>::iterator itr;
+
+		while ( (itr = adjacent_find(intervals.begin(),intervals.end(),structFind)) != intervals.end() )
+				intervals.erase(itr,itr+2);
+
+		int inCount = 1;
+		int outCount = 0;
+		int tempIn = intervals[0].time;
+		int tempOut = 0;
+		int milked = 0;
+		int no = 0;
+
+		for (int i=1;i<intervals.size();i++)
+		{
+			if (intervals[i].start)
+			{
+				if (inCount == 0)
+				{
+					tempIn = intervals[i].time;
+
+					int tempNo = tempIn - tempOut;
+
+					if (tempNo > no)
+						no = tempNo;
+				}
+
+				inCount++;
+			}
+
+			else
+			{
+				tempOut = intervals[i].time;
+				outCount++;
+			}
+
+			if (inCount != 0 && outCount !=0)
+			{
+				if (inCount >= outCount)
+				{
+					inCount -= outCount;
+					outCount = 0;
+				}
+
+				else if (outCount > inCount)
+				{
+					outCount -= inCount;
+					inCount = 0;
+				}
+			}
+
+			if (inCount == 0 && outCount == 0)
+			{
+				int milking = tempOut - tempIn;
+
+				if (milking > milked )
+				{
+					milked = milking;
+				}
+			}
+		}
+		cout << milked << " " << no << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,183 @@
+
+// problem - 750 - 8 Queens Chess Problem - UVA 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+ifstream fin("input.in");
+ofstream fout("output.out");
+
+#define cin fin
+#define cout fout
+
+int board[8][8];
+int X,Y;
+int counter = 0;
+
+void Add(int x,int y)
+{
+	for (int i=0;i<8;i++)
+	{
+		if (board[x][i] == -1)
+			board[x][i] = y;
+
+		if (board[i][y] == -1)
+			board[i][y] = y;
+	}
+
+	// -
+	//    -
+	for (int i=x,j=y; (i>=0 && j>=0) ;i--,j--)
+	{
+		if (board[i][j] == -1)
+			board[i][j] = y;
+	}
+
+	for (int i=x,j=y; (i<8 && j<8) ;i++,j++)
+	{
+		if (board[i][j] == -1)
+			board[i][j] = y;
+	}
+	
+
+	//    - 
+	// - 
+	for (int i=x,j=y; (i>=0 && j<8) ;i--,j++)
+	{
+		if (board[i][j] == -1)
+			board[i][j] = y;
+	}
+
+	for (int i=x,j=y; (i<8 && j>=0) ;i++,j--)
+	{
+		if (board[i][j] == -1)
+			board[i][j] = y;
+	}
+
+}
+
+void Remove(int x,int y)
+{
+	for (int i=0;i<8;i++)
+	{
+		if (board[x][i] == y)
+			board[x][i] = -1;
+
+		if (board[i][y] == y)
+			board[i][y] = -1;
+	}
+
+	// -
+	//    -
+	for (int i=x,j=y; (i>=0 && j>=0) ;i--,j--)
+	{
+		if (board[i][j] == y)
+			board[i][j] = -1;
+	}
+
+	for (int i=x,j=y; (i<8 && j<8) ;i++,j++)
+	{
+		if (board[i][j] == y)
+			board[i][j] = -1;
+	}
+	
+
+	//    - 
+	// - 
+	for (int i=x,j=y; (i>=0 && j<8) ;i--,j++)
+	{
+		if (board[i][j] == y)
+			board[i][j] = -1;
+	}
+
+	for (int i=x,j=y; (i<8 && j>=0) ;i++,j--)
+	{
+		if (board[i][j] == y)
+			board[i][j] = -1;
+	}
+
+}
+
+void Display()
+{
+	cout << counter << "      ";
+
+	for (int i=0;i<8;i++)
+	{
+		for (int j=0;j<8;j++)
+		{
+			if (board[j][i] == 9)
+			{
+				cout << j+1;
+				
+				if (i<7)
+					cout << " ";
+			}
+		}
+	}
+}
+
+void Rec_Aux(int col)
+{
+	if(col == 8)
+	{
+		if (counter!= 0)
+			cout << endl;
+
+		counter++;
+		Display();
+
+		return;
+	}
+
+	if (col == Y-1)
+		Rec_Aux(col+1);
+
+	else
+	{
+		for(int i=0;i<8;i++)
+		{
+			if(board[i][col] == -1)
+			{
+				Add(i,col);
+				board[i][col] = 9;
+				Rec_Aux(col+1);
+				board[i][col] = -1;
+				Remove(i,col);
+			}
+		}
+	}
+}
+
+int main ()
+{
+	int N;
+	cin >> N;
+
+	for(int j=0;j<N;j++)
+	{
+		cin >> X >> Y;
+
+		for (int i=0;i<8;i++)
+		{
+			for (int j=0;j<8;j++)
+				board[i][j] = -1;
+		}
+
+		counter = 0;
+		Add(X-1,Y-1);
+		board[X-1][Y-1] = 9;
+		cout << "SOLN      COLUMN" << endl;
+		cout << "#      1 2 3 4 5 6 7 8" << endl;
+		cout << endl;
+
+		Rec_Aux(0);
+
+		if (j <N-1)
+			cout << endl << endl;
+	}
+
+	return 0;
+}

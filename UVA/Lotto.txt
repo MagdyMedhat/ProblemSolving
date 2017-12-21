@@ -1,0 +1,143 @@
+
+// problem - 441 LOTTO - UVA 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+ifstream fin("input.in");
+ofstream fout("output.out");
+
+#define cin fin
+#define cout fout
+
+void ProcessCombination(int arr[],int combination[],int r)
+{
+	for(int i=0; i<r; i++)
+	{
+		cout << combination[i] << " ";
+	}
+
+	cout << endl;
+}
+
+
+void nCr(int arr[],int combination[],int k, int idx, int n,int r)
+{
+	if( k == r )
+	{
+		ProcessCombination(arr,combination,r);
+		return;
+	}
+
+	else
+	{
+		for( int i=idx;i<n;i++)
+		{
+			combination[k] = arr[i];
+			nCr(arr,combination,k+1,i+1,n,r);
+		}
+	}
+}
+
+
+int main()
+{
+	int lotto[50];
+	int sol[6];
+	int k;
+	int count = 0;
+
+	while (cin >> k)
+	{
+		if (k != 0 && count > 0)
+			cout << endl;
+
+		else if (k== 0)
+			break;
+
+		for(int i=0;i<k;i++)
+			cin >> lotto[i];
+
+		nCr(lotto,sol,0,0,k,6);
+		
+		count++;
+	}
+
+	return 0;
+}
+
+=================================================================================================================
+
+
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+ifstream fin("input.in");
+ofstream fout("output.out");
+
+#define cin fin
+#define cout fout
+
+int main ()
+{
+	int lotto[50];
+	int k;
+	int count = 0;
+
+	while (cin >> k)
+	{
+		if (k != 0 && count > 0)
+			cout << endl;
+
+		else if (k== 0)
+			break;
+
+		for(int i=0;i<k;i++)
+			cin >> lotto[i];
+
+		for(int i=0;i<k;i++)
+		{
+			for(int w=0;w<k;w++)
+			{
+				if (w==i || w<i) 
+					continue;
+
+				for(int j=0;j<k;j++)
+				{
+					if (j==i || j==w || j<w) 
+					continue;
+
+					for(int m=0;m<k;m++)
+					{
+						if (m==i || m==w || m==j || m<j) 
+							continue;
+
+						for(int n=0;n<k;n++)
+						{
+							if(n==i || n==m || n==w || n==j || n<m)
+								continue;
+
+							for(int q=0;q<k;q++)
+							{
+								if(q==i || q==m || q==w || q==j || q==n || q<n)
+									continue;
+								
+
+									cout << lotto[i] << " " << lotto[w] << " " << lotto[j] << " " << lotto[m] << " " << lotto[n] << " " << lotto[q] << endl;
+								
+							}
+						}
+					}
+				}
+
+			}
+		}
+		count++;
+	}
+
+	return 0;
+}

@@ -1,0 +1,78 @@
+
+// problem  10038 - Jolly Jumpers - UVA 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+ifstream fin("Input.txt");
+#define cin fin
+
+int getDif(int num1,int num2)
+{
+	int temp = num1 - num2;
+
+	if ( (temp > 0) && (temp <= 3000) )
+		return temp;
+
+	else if ( (temp < 0) && (temp*-1 <= 3000) )
+		return (temp*-1);
+
+	else
+		return 0;
+}
+
+int main()
+{
+	int num[3001];
+	bool found[3001];
+	int dif;
+	int n;
+	
+	while ( cin >> n )
+	{	
+		for (int i=0;i<n;i++)
+			found[i] = false;
+
+		for (int i=1; i<=n ;i++)
+		{
+			cin >> num[i]; 
+
+			if (i == 1)
+				continue;
+
+			dif = getDif(num[i-1],num[i]);
+
+			if ( found[dif] == false)
+				found[dif] = true;
+
+			else
+				found[0] = true;
+		}
+
+		if (found[0] == true)
+			cout << "Not jolly" << endl;
+
+		else
+		{
+			found[0] = true;
+
+			for (int i=1;i<n;i++)
+			{
+				if (found[i] == false)
+				{
+					cout << "Not jolly" << endl;
+					found[0] = false;
+					break;
+				}
+			}
+
+			if (found[0] == true)
+				cout << "Jolly" << endl;
+		}
+	}
+
+	return 0;
+}

@@ -1,0 +1,61 @@
+
+// problem 10282 - Babelfish - UVA 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+int main()
+{
+	vector<string> lang;
+	vector<string> dic;
+	bool found;
+
+	string input;
+
+	while ( getline(cin,input) )
+	{
+		
+		int pos = input.find(" ");
+
+		if ( pos != string::npos )
+		{
+			 // parse
+			string temp = input.substr(pos+1);
+			input.erase(pos);
+			
+			dic.push_back(input);
+			lang.push_back(temp);
+		}
+
+		else
+			break;
+	}
+
+	while ( cin >> input )
+	{
+		found = false;
+
+		for(int i=0;i<lang.size();i++)
+		{
+
+			if ( input == lang[i] )
+			{
+				found = true;
+				cout << dic[i] << endl;
+				break;
+			}
+		}
+
+		if ( !found )
+			cout << "eh" << endl;
+	}
+
+	return 0;
+}

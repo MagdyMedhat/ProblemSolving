@@ -1,0 +1,60 @@
+
+// problem 11040 - Add bricks in the wall - UVA
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+
+using namespace std;
+
+ifstream fin("input.txt");
+#define cin fin
+
+
+void getMissingBricks(int &a,int &b,int &c,int &x,int &y,int &z)
+{
+	z = (a - b - c) / 2;
+	x = z + b;
+	y = z + c;
+}
+
+int main()
+{
+	int n;
+	cin >> n;
+
+	for (int i=0;i<n;i++)
+	{
+		vector< vector<int> > wall;
+
+		for (int i=0;i<9;i++)
+			wall.push_back( vector<int>(i+1,-1) );
+
+		for (int i=0;i<wall.size();i+=2)
+		{
+			for (int j=0;j<wall[i].size();j+=2)
+				cin >> wall[i][j];
+		}
+		
+		getMissingBricks(wall[0][0],wall[2][0],wall[2][2],wall[1][0],wall[1][1],wall[2][1]);
+		getMissingBricks(wall[2][0],wall[4][0],wall[4][2],wall[3][0],wall[3][1],wall[4][1]);
+		getMissingBricks(wall[2][2],wall[4][2],wall[4][4],wall[3][2],wall[3][3],wall[4][3]);
+		getMissingBricks(wall[4][0],wall[6][0],wall[6][2],wall[5][0],wall[5][1],wall[6][1]);
+		getMissingBricks(wall[4][2],wall[6][2],wall[6][4],wall[5][2],wall[5][3],wall[6][3]);
+		getMissingBricks(wall[4][4],wall[6][4],wall[6][6],wall[5][4],wall[5][5],wall[6][5]);
+		getMissingBricks(wall[6][0],wall[8][0],wall[8][2],wall[7][0],wall[7][1],wall[8][1]);
+		getMissingBricks(wall[6][2],wall[8][2],wall[8][4],wall[7][2],wall[7][3],wall[8][3]);
+		getMissingBricks(wall[6][4],wall[8][4],wall[8][6],wall[7][4],wall[7][5],wall[8][5]);
+		getMissingBricks(wall[6][6],wall[8][6],wall[8][8],wall[7][6],wall[7][7],wall[8][7]);
+
+		for (int i=0;i<wall.size();i++)
+		{
+			for (int j=0;j<wall[i].size();j++)
+				cout << wall[i][j] << " ";
+
+			cout << endl;
+		}
+	}
+
+	return 0;
+}

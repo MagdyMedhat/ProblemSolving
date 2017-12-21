@@ -1,0 +1,182 @@
+
+// problem - 167 The Sultan's Successors - UVA 
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include<iomanip>
+
+using namespace std;
+
+ifstream fin("input.in");
+ofstream fout("output.out");
+
+#define cin fin
+#define cout fout
+
+void Add(int x,int y,int board[8][8])
+{
+
+
+	for (int i=0;i<8;i++)
+	{
+		board[x][i]++;
+		
+		board[i][y]++;
+	}
+
+	// -
+	//    -
+	for (int i=x,j=y; (i>=0 && j>=0) ;i--,j--)
+	{
+			board[i][j]++;
+	}
+
+	for (int i=x,j=y; (i<8 && j<8) ;i++,j++)
+	{
+			board[i][j]++;
+	}
+
+	//    - 
+	// - 
+	for (int i=x,j=y; (i>=0 && j<8) ;i--,j++)
+	{
+			board[i][j]++;
+	}
+
+	for (int i=x,j=y; (i<8 && j>=0) ;i++,j--)
+	{
+			board[i][j]++;
+	}
+	
+	board[x][y] = -1; // PLACE A Queen
+}
+
+void Remove(int x,int y,int board[8][8])
+{
+	board[x][y] = 0; // Remove A Queen
+
+	for (int i=0;i<8;i++)
+	{
+		if (board[x][i] > 0)
+			board[x][i]--;
+
+		if (board[i][y] > 0)
+			board[i][y]--;
+	}
+
+	// -
+	//    -
+	for (int i=x,j=y; (i>=0 && j>=0) ;i--,j--)
+	{
+		if (board[i][j] > 0)
+			board[i][j]--;
+	}
+
+	for (int i=x,j=y; (i<8 && j<8) ;i++,j++)
+	{
+		if (board[i][j] > 0)
+			board[i][j]--;
+	}
+
+	//    - 
+	// - 
+	for (int i=x,j=y; (i>=0 && j<8) ;i--,j++)
+	{
+		if (board[i][j] > 0)
+			board[i][j]--;
+	}
+
+	for (int i=x,j=y; (i<8 && j>=0) ;i++,j--)
+	{
+		if (board[i][j] > 0)
+			board[i][j]--;
+	}
+}
+
+void Process(int board[8][8],int preCalculate[100][8])
+{
+	static int count = -1;
+	count++;
+
+	for(int i=0;i<8;i++)
+	{
+		for(int j=0;j<8;j++)
+		{
+			if (board[i][j] == -1)
+				preCalculate[count][i] = j;
+		}
+
+	}
+}
+
+void Empty(int board[8][8])
+{
+	for(int i=0;i<8;i++)
+	{
+		for(int j=0;j<8;j++)
+			board[i][j] = 0;
+	}
+}
+
+void sol(int col,int board[8][8],int preCalculate[92][8])
+{
+	if (col == 8)
+	{
+		Process(board,preCalculate);
+		return;
+	}
+
+	else
+	{
+		for(int i=0;i<8;i++)
+		{
+			if(board[i][col] == 0)
+			{
+				Add(i,col,board);
+				sol(col+1,board,preCalculate);
+				Remove(i,col,board);
+			}
+		}
+	}
+
+}
+
+int main()
+{
+	int preCalculate[92][8];
+	int board[8][8];
+	Empty(board);
+	sol(0,board,preCalculate);
+
+	int score[8][8];
+	int max;
+	int k;
+	cin >> k;
+
+	for(int i=0;i<k;i++)
+	{
+		max = 0;
+
+		for(int j=0;j<8;j++)
+		{
+			for(int m=0;m<8;m++)
+				cin >> score[j][m];
+		}
+
+		for(int q=0;q<92;q++)
+		{
+			int temp = 0;
+
+			for(int w=0;w<8;w++)
+				temp += score [w][ preCalculate[q][w] ];
+
+			if ( temp > max)
+				max = temp;
+		}
+
+		cout << setw(5) << max << endl;
+	}
+
+	return 0;
+}
